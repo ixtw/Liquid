@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liquid Visuals - Твой путь к победе</title>
+    <!-- Подключаем шрифты и иконки -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- НАСТРОЙКИ ПЕРЕМЕННЫХ И ЦВЕТОВ --- */
+        :root {
+            --brand-primary: #00c6ff;  /* Яркий голубой */
+            --brand-secondary: #0072ff; /* Глубокий синий */
+            --dark-bg-start: #0f0c29;   /* Очень темный */
+            --dark-bg-end: #302b63;     /* Темно-серый/фиолетовый */
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg-start), var(--dark-bg-end), #24243e);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* --- ФОН (PARTICLES) --- */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* --- БОКОВАЯ ПАНЕЛЬ (SIDEBAR) --- */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100px; /* Узкая полоска на десктопе */
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            z-index: 100;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar:hover {
+            width: 200px; /* Раскрывается при наведении */
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 50px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
+            transition: transform 0.3s;
+        }
+        
+        .sidebar:hover .logo-container {
+            transform: scale(1.1);
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Табы навигации */
+        .nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .nav-item i {
+            font-size: 1.5rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .nav-text {
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        .sidebar:hover .nav-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--brand-primary);
+            background: linear-gradient(90deg, rgba(0,198,255,0.1), transparent);
+            border-left: 3px solid var(--brand-primary);
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
+        .main-content {
+            margin-left: 100px; /* Отступ под сайдбар */
+            padding: 0;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .sidebar:hover ~ .main-content {
+             /* Можно сдвигать контент, но лучше оставить как есть */
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 5vw; /* Адаптивный размер */
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #b9b9b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: slideDown 1s ease-out;
+        }
+
+        .hero h1 span {
+            display: block;
+            font-size: 2rem;
+            color: var(--brand-primary);
+            -webkit-text-fill-color: var(--brand-primary);
+            margin-top: 10px;
+            letter-spacing: 3px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 50px;
+            animation: slideUp 1s ease-out 0.5s backwards;
+        }
+
+        /* Кнопки Download и Discord */
+        .btn-outline {
+            position: relative;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            border: 2px solid var(--brand-secondary);
+            border-radius: 50px;
+            overflow: hidden;
+            transition: 0.4s;
+            z-index: 1;
+        }
+
+        .btn-outline i { margin-right: 10px; }
+
+        .btn-outline::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 0%; height: 100%;
+            background: linear-gradient(90deg, var(--brand-secondary), var(--brand-primary));
+            transition: 0.4s;
+            z-index: -1;
+            border-radius: 50px;
+        }
+
+        .btn-outline:hover {
+            border-color: transparent;
+            box-shadow: 0 0 30px rgba(0, 198, 255, 0.6);
+            transform: translateY(-5px);
+        }
+
+        .btn-outline:hover::before { width: 100%; }
+
+        /* --- СЕКЦИЯ ОТЛИЧИЙ (FEATURES) --- */
+        .section-container {
+            padding: 100px 50px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            text-align: center;
+            background: linear-gradient(90deg, #fff, var(--brand-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .glass-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--brand-primary);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .glass-card p {
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .subtitle {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* --- СЕКЦИЯ ТАРИФЫ (PRICING) --- */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .price-card {
+            background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: 0.4s;
+            position: relative;
+        }
+
+        /* Выделение центральной карточки или при наведении */
+        .price-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 50px rgba(0, 114, 255, 0.2);
+        }
+
+        .price-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .price-desc {
+            color: #bbb;
+            margin-bottom: 30px;
+            min-height: 50px;
+        }
+
+        .price-btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px 0;
+            background: linear-gradient(90deg, var(--brand-secondary), var(--brand-primary));
+            color: #fff;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 114, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .price-btn:hover {
+            box-shadow: 0 5px 30px rgba(0, 198, 255, 0.7);
+            transform: scale(1.05);
+        }
+
+        /* --- ANIMATIONS (Fade In Scroll) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- MOBILE ADAPTIVE --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 60px;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                justify-content: space-around;
+                padding: 0;
+                border-right: none;
+                border-top: 1px solid var(--glass-border);
+            }
+            .sidebar:hover { width: 100%; height: 60px; }
+            .logo-container { display: none; }
+            .nav-text { display: none; }
+            .nav-links { flex-direction: row; justify-content: space-around; width: 100%; gap: 0; }
+            .nav-item { padding: 10px; border-left: none; border-bottom: 3px solid transparent; }
+            .nav-item:hover, .nav-item.active { border-left: none; border-bottom: 3px solid var(--brand-primary); }
+            
+            .main-content { margin-left: 0; margin-bottom: 60px; }
+            .hero h1 { font-size: 3rem; }
+            .hero h1 span { font-size: 1.2rem; }
+            .hero-buttons { flex-direction: column; width: 80%; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Канвас для анимации частиц -->
+    <canvas id="particles-js"></canvas>
+
+    <!-- Боковая панель (Sidebar) -->
+    <nav class="sidebar">
+        <!-- Логотип из вашего запроса -->
+        <div class="logo-container">
+            <img src="https://i.imgur.com/L2XwZ5m.jpeg" alt="Liquid Logo">
+        </div>
+
+        <div class="nav-links">
+            <a href="#hero" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span class="nav-text">Главная</span>
+            </a>
+            <a href="#features" class="nav-item">
+                <i class="fas fa-layer-group"></i>
+                <span class="nav-text">Отличия</span>
+            </a>
+            <a href="#pricing" class="nav-item">
+                <i class="fas fa-tags"></i>
+                <span class="nav-text">Тарифы</span>
+            </a>
+            <a href="https://discord.gg/" target="_blank" class="nav-item">
+                <i class="fab fa-discord"></i>
+                <span class="nav-text">Discord</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+
+        <!-- Главный экран -->
+        <section id="hero" class="hero">
+            <h1>Liquid Visuals<br><span>Твой путь к победе!</span></h1>
+            
+            <div class="hero-buttons">
+                <a href="#" class="btn-outline">
+                    <i class="fas fa-download"></i> Download
+                </a>
+                <a href="https://discord.gg/" class="btn-outline">
+                    <i class="fab fa-discord"></i> Discord
+                </a>
+            </div>
+        </section>
+
+        <!-- Секция отличий -->
+        <section id="features" class="section-container">
+            <h2 class="section-title reveal">Отличие нашего мода:</h2>
+
+            <div class="features-grid">
+                <!-- Карточка Совместимость -->
+                <div class="glass-card reveal">
+                    <h3><i class="fas fa-puzzle-piece"></i> Совместимость</h3>
+                    <p>Наш продукт разработан так, чтобы работать безупречно.</p>
+                    <span class="subtitle">Подходит под многие проекты игры Minecraft!</span>
+                </div>
+
+                <!-- Карточка Оптимизация -->
+                <div class="glass-card reveal">
+                    <h3><i class="fas fa-bolt"></i> Оптимизация</h3>
+                    <p>Максимальная производительность без потери качества.</p>
+                    <span class="subtitle">Оптимизирован под многие ПК, даже на слабые!</span>
+                </div>
+                
+                 <!-- Дополнительная карточка для баланса -->
+                 <div class="glass-card reveal">
+                    <h3><i class="fas fa-shield-alt"></i> Безопасность</h3>
+                    <p>Надежная защита от обнаружений и банов.</p>
+                    <span class="subtitle">Играйте спокойно с Liquid Visuals.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Секция Тарифы -->
+        <section id="pricing" class="section-container">
+            <h2 class="section-title reveal">Тарифы</h2>
+            
+            <div class="pricing-grid">
+                <!-- 30 Дней -->
+                <div class="price-card reveal">
+                    <div class="price-title">30 Дней</div>
+                    <div class="price-desc">
+                        Доступ ко всем функциям Liquid Visuals на месяц.
+                    </div>
+                    <a href="#" class="price-btn">Приобрести</a>
+                </div>
+
+                <!-- 180 Дней -->
+                <div class="price-card reveal" style="border-color: var(--brand-primary); box-shadow: 0 0 20px rgba(0,198,255,0.1);">
+                    <div class="price-title" style="color: var(--brand-primary)">180 Дней</div>
+                    <div class="price-desc">
+                        Полгода доминирования. Доступ ко всем функциям Liquid Visuals.
+                    </div>
+                    <a href="#" class="price-btn">Приобрести</a>
+                </div>
+
+                <!-- Навсегда -->
+                <div class="price-card reveal">
+                    <div class="price-title">Навсегда</div>
+                    <div class="price-desc">
+                        Бесконечный доступ ко всем функциям Liquid Visuals.
+                    </div>
+                    <a href="#" class="price-btn">Приобрести</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- СКРИПТЫ (Анимации и Партиклы) -->
+    <script>
+        // 1. Анимация Партиклов (Созвездия)
+        const canvas = document.getElementById('particles-js');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                this.x += this.directionX;
+                this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 1) - 0.5;
+                let directionY = (Math.random() * 1) - 0.5;
+                let color = '#8ca6db';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+            }
+            connect();
+        }
+
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + 
+                                   ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = 'rgba(140, 166, 219,' + opacityValue + ')';
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = innerWidth;
+            canvas.height = innerHeight;
+            init();
+        });
+
+        init();
+        animate();
+
+        // 2. Анимация появления при скролле (Reveal on Scroll)
+        window.addEventListener('scroll', reveal);
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+        // Запустить один раз при загрузке, чтобы показать видимые элементы
+        reveal();
+
+        // 3. Подсветка активного таба
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.addEventListener('click', function() {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
