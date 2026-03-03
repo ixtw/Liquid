@@ -71,6 +71,7 @@
             overflow: hidden;
             box-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
             transition: transform 0.3s;
+            background-color: #000; /* Черный фон, если лого прозрачное */
         }
         
         .sidebar:hover .logo-container {
@@ -80,7 +81,7 @@
         .logo-container img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover; /* Или contain, если лого обрезается */
         }
 
         /* Табы навигации */
@@ -134,10 +135,6 @@
             transition: margin-left 0.3s ease;
         }
         
-        .sidebar:hover ~ .main-content {
-             /* Можно сдвигать контент, но лучше оставить как есть */
-        }
-
         /* --- HERO SECTION --- */
         .hero {
             height: 100vh;
@@ -385,9 +382,9 @@
 
     <!-- Боковая панель (Sidebar) -->
     <nav class="sidebar">
-        <!-- Логотип из вашего запроса -->
+        <!-- ЛОГОТИП (Файл должен называться logo.png) -->
         <div class="logo-container">
-            <img src="https://i.imgur.com/L2XwZ5m.jpeg" alt="Liquid Logo">
+            <img src="logo.png" alt="Liquid Logo">
         </div>
 
         <div class="nav-links">
@@ -403,7 +400,8 @@
                 <i class="fas fa-tags"></i>
                 <span class="nav-text">Тарифы</span>
             </a>
-            <a href="https://discord.gg/" target="_blank" class="nav-item">
+            <!-- ССЫЛКА НА DISCORD -->
+            <a href="https://discord.gg/vgG5c7qB8g" target="_blank" class="nav-item">
                 <i class="fab fa-discord"></i>
                 <span class="nav-text">Discord</span>
             </a>
@@ -421,7 +419,8 @@
                 <a href="#" class="btn-outline">
                     <i class="fas fa-download"></i> Download
                 </a>
-                <a href="https://discord.gg/" class="btn-outline">
+                <!-- ССЫЛКА НА DISCORD -->
+                <a href="https://discord.gg/vgG5c7qB8g" class="btn-outline">
                     <i class="fab fa-discord"></i> Discord
                 </a>
             </div>
@@ -491,7 +490,7 @@
 
     </main>
 
-    <!-- СКРИПТЫ (Анимации и Партиклы) -->
+    <!-- СКРИПТЫ -->
     <script>
         // 1. Анимация Партиклов (Созвездия)
         const canvas = document.getElementById('particles-js');
@@ -589,7 +588,6 @@
                 }
             }
         }
-        // Запустить один раз при загрузке, чтобы показать видимые элементы
         reveal();
 
         // 3. Подсветка активного таба
